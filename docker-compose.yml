@@ -11,15 +11,18 @@ services:
       DELAY_HOURS: 4
     restart: unless-stopped
 
-  web-editor:
-    build:
-      context: ./web-editor
-      dockerfile: Dockerfile
-    container_name: web_editor
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
     ports:
-      - "5001:5001"  # Flask default port
-    volumes:
-      - ./data:/data
+      - "8080:80"
     environment:
-      RESOURCE_BASEPATH: /data
+      # These can also come from your .env file
+      PUID: ${PUID:-1000}
+      PGID: ${PGID:-1000}
+            
+    volumes:
+      - ./data:/srv
+      - ./web-editor/database:/database
+      - ./web-editor/config:/config
     restart: unless-stopped
