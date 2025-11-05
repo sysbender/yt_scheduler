@@ -1,0 +1,25 @@
+services:
+  yt-downloader:
+    build:
+      context: ./yt_downloader
+      dockerfile: Dockerfile
+    container_name: yt_downloader
+    volumes:
+      - ./data:/data
+    environment:
+      MAX_PER_DAY: 5
+      DELAY_HOURS: 4
+    restart: unless-stopped
+
+  web-editor:
+    build:
+      context: ./web-editor
+      dockerfile: Dockerfile
+    container_name: web_editor
+    ports:
+      - "5001:5001"  # Flask default port
+    volumes:
+      - ./data:/data
+    environment:
+      RESOURCE_BASEPATH: /data
+    restart: unless-stopped
